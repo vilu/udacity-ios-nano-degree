@@ -36,6 +36,9 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     var bottomToolbar: UIToolbar!
     var shareButton: UIBarButtonItem!
     
+    private var originTabBarVisibility: Bool = false
+    private var originNavBarVisibility: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         topToolbar = UIToolbar()
@@ -127,15 +130,32 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
         super.viewWillAppear(animated)
         subscribeToKeyboardNotifications()
+        
+        if let navigationController = navigationController {
+            originNavBarVisibility = navigationController.isNavigationBarHidden
+            navigationController.isNavigationBarHidden = true
+        }
+        
+        if let tabBarController = tabBarController {
+            originTabBarVisibility = tabBarController.tabBar.isHidden
+            tabBarController.tabBar.isHidden = true
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
 
         super.viewWillDisappear(animated)
         unsubscribeFromKeyboardNotifications()
+
+        if let navigationController = navigationController {
+            navigationController.isNavigationBarHidden = originNavBarVisibility
+        }
+        
+        if let tabBarController = tabBarController {
+            tabBarController.tabBar.isHidden = originTabBarVisibility
+        }
     }
 
     private func subscribeToKeyboardNotifications() {
@@ -210,7 +230,9 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     }
     
     private func save(memedImage: UIImage) {
-        let _ = MemeModel(topText: topTextField.text ?? "", originalImage: imagePickerView.image!, memedImage: memedImage, bottomText: bottomTextField.text ?? "")
+        let meme = Meme(topText: topTextField.text ?? "", originalImage: imagePickerView.image!, memedImage: memedImage, bottomText: bottomTextField.text ?? "")
+        
+        (UIApplication.shared.delegate as! AppDelegate).memes.append(meme)
     }
     
     @objc private func cancel() {
@@ -218,6 +240,7 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
         bottomTextField.text = Constants.Text.bottomLabel
         imagePickerView.image = nil
         toggleShareButton()
+        navigationController.map { $0.popViewController(animated: true) }
     }
     
     private func getKeyboardHeight(_ notification:Notification) -> CGFloat {
@@ -262,7 +285,7 @@ extension MemeEditorViewController: UIImagePickerControllerDelegate {
 }
 
 // MARK: - Model
-struct MemeModel {
+struct Meme {
     let topText: String
     let originalImage: UIImage?
     let memedImage: UIImage?

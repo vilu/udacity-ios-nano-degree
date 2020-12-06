@@ -1,16 +1,16 @@
-//
-//  AppDelegate.swift
-//  MemeMe
-//
-//  Created by Viktor Lund on 08.11.20.
-//
-
 import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
+    
+    var memes = [Meme]()
+//    var memes = [
+//        Meme(topText: "top text 1", originalImage: UIImage(named: "LaunchImage"), memedImage: UIImage(named: "LaunchImage"), bottomText: "bottom text 1"),
+//        Meme(topText: "top text 2", originalImage: UIImage(named: "LaunchImage"), memedImage: UIImage(named: "LaunchImage"), bottomText: "bottom text 2"),
+//        Meme(topText: "top text 3", originalImage: UIImage(named: "LaunchImage"), memedImage: UIImage(named: "LaunchImage"), bottomText: "bottom text 3"),
+//        Meme(topText: "top text 4", originalImage: UIImage(named: "LaunchImage"), memedImage: UIImage(named: "LaunchImage"), bottomText: "bottom text 4"),
+//        Meme(topText: "top text 5", originalImage: UIImage(named: "LaunchImage"), memedImage: UIImage(named: "LaunchImage"), bottomText: "bottom text 5")
+//    ]
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
