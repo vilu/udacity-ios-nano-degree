@@ -4,9 +4,7 @@ import WebKit
 
 final class LocationMapViewController: UIViewController {
     @IBOutlet weak var map: MKMapView!
-    
-    private var parseAPI: ParseAPIProtocol!
-    
+        
     private var displayedAnnotations: [MKAnnotation]? {
         willSet {
             if let currentAnnotations = displayedAnnotations {
@@ -21,19 +19,26 @@ final class LocationMapViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        
-        parseAPI = appDelegate.dependencies.parseAPI
-        
         map.delegate = self
         
         updateLocations()
     }
     
     @IBAction func logoutOnTap(_ sender: Any) {
-        // TODO implement log out
+        guard
+            let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
+            let storyboard = storyboard
+        else {
+            return
+        }
+        
+        AppDependencies.udacityAPI.signOut { _ in
+            DispatchQueue.main.async {
+                let vc = storyboard.instantiateViewController(identifier: Constants.Layout.Identifiers.signInViewController)
+                
+                sceneDelegate.window?.rootViewController = vc
+            }
+        }
     }
     
     @IBAction func refreshOnTap(_ sender: Any) {
@@ -55,9 +60,7 @@ final class LocationMapViewController: UIViewController {
     }
     
     private func updateLocations() {
-        parseAPI.fetchLocations { result in
-            // TODO Is this correct? Is there any less error prone way of
-            // handling the threading here?
+        AppDependencies.parseAPI.fetchLocations { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let locations):
@@ -92,8 +95,7 @@ extension LocationMapViewController: MKMapViewDelegate {
             return nil
         }
         
-        let reuseId = "pin-reuse-id"
-        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) ?? MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: Constants.Layout.Identifiers.pinReuseIdentifier) ?? MKPinAnnotationView(annotation: annotation, reuseIdentifier: Constants.Layout.Identifiers.pinReuseIdentifier)
         
         annotationView.canShowCallout = true
         annotationView.annotation = annotation

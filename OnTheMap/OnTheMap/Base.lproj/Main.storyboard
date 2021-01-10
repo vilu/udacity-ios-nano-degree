@@ -11,7 +11,7 @@
         <!--Sign In View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="SignInViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="signInViewController" id="BYZ-38-t0r" customClass="SignInViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -276,7 +276,7 @@
         <!--Add Location Controller-->
         <scene sceneID="Q8K-2h-dhv">
             <objects>
-                <viewController storyboardIdentifier="addLocationViewController" title="Add location" id="ZN7-RR-afF" userLabel="Add Location Controller" customClass="AddLocationViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addLocationViewController" title="Add location" hidesBottomBarWhenPushed="YES" id="ZN7-RR-afF" userLabel="Add Location Controller" customClass="AddLocationViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="p08-HJ-fjb">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -344,13 +344,13 @@
         <!--Confirm location-->
         <scene sceneID="Izx-yp-fEF">
             <objects>
-                <viewController storyboardIdentifier="confirmLocationViewController" title="Add location" id="8wX-GN-R35" userLabel="Confirm location" customClass="ConfirmLocationViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="confirmLocationViewController" title="Add location" hidesBottomBarWhenPushed="YES" id="8wX-GN-R35" userLabel="Confirm location" customClass="ConfirmLocationViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="51T-aF-xEM">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="UeA-kG-X11">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MhT-pu-JND">
                                 <rect key="frame" x="16" y="816" width="382" height="30"/>
@@ -368,7 +368,7 @@
                         <constraints>
                             <constraint firstItem="UeA-kG-X11" firstAttribute="top" secondItem="g1Z-PX-Bi6" secondAttribute="top" id="1Ju-nX-bGz"/>
                             <constraint firstItem="g1Z-PX-Bi6" firstAttribute="trailing" secondItem="MhT-pu-JND" secondAttribute="trailing" constant="16" id="4Po-Jf-WZe"/>
-                            <constraint firstItem="g1Z-PX-Bi6" firstAttribute="bottom" secondItem="UeA-kG-X11" secondAttribute="bottom" id="6Ak-3j-Igp"/>
+                            <constraint firstAttribute="bottom" secondItem="UeA-kG-X11" secondAttribute="bottom" id="6Ak-3j-Igp"/>
                             <constraint firstItem="MhT-pu-JND" firstAttribute="leading" secondItem="g1Z-PX-Bi6" secondAttribute="leading" constant="16" id="GFA-rn-YH2"/>
                             <constraint firstItem="g1Z-PX-Bi6" firstAttribute="trailing" secondItem="UeA-kG-X11" secondAttribute="trailing" id="W9x-fD-WYr"/>
                             <constraint firstItem="UeA-kG-X11" firstAttribute="leading" secondItem="g1Z-PX-Bi6" secondAttribute="leading" id="iZC-4A-vOY"/>
@@ -378,7 +378,7 @@
                     <navigationItem key="navigationItem" title="Add Location" id="axC-fD-WO4">
                         <barButtonItem key="leftBarButtonItem" title="CANCEL" id="3v9-83-QZZ">
                             <connections>
-                                <action selector="cancelButtonOnTap:" destination="ZN7-RR-afF" id="9G3-Ty-nZS"/>
+                                <action selector="cancelButtonOnTap:" destination="8wX-GN-R35" id="6k9-XN-myP"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

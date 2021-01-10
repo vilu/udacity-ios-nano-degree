@@ -2,12 +2,23 @@ import UIKit
 
 final class LocationTableViewController: UITableViewController {
     
-    private var parseAPI: ParseAPIProtocol!
+    private var studentLocations = [StudentInformation]()
     
-    private var studentLocations = [StudentLocation]()
-
     @IBAction func logoutOnTap(_ sender: Any) {
-        // TODO implemement
+        guard
+            let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
+            let storyboard = storyboard
+        else {
+            return
+        }
+        
+        AppDependencies.udacityAPI.signOut { _ in
+            DispatchQueue.main.async {
+                let vc = storyboard.instantiateViewController(identifier: Constants.Layout.Identifiers.signInViewController)
+                
+                sceneDelegate.window?.rootViewController = vc
+            }
+        }
     }
     
     @IBAction func refreshOnTap(_ sender: Any) {
@@ -18,19 +29,11 @@ final class LocationTableViewController: UITableViewController {
     }
     
     override func viewDidLoad() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        
-        parseAPI = appDelegate.dependencies.parseAPI
-        
         updateLocations()
     }
     
     private func updateLocations() {
-        parseAPI.fetchLocations { result in
-            // TODO Is this correct? Is there any less error prone way of
-            // handling the threading here?
+        AppDependencies.parseAPI.fetchLocations { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let locations):

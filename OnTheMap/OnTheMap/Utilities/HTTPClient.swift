@@ -1,20 +1,21 @@
 import Foundation
 
-// TODO align
 enum HTTPError<ServerError: Decodable>:Error {
     case generalError
     case serverError(statusCode: Int, error: ServerError?)
 }
 
 protocol HttpClientProtocol {
-    func get<Response: Decodable, ServerError: Decodable>(url: URL, callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void)
+    func get<Response: Decodable, ServerError: Decodable>(url: URL, headers: [(key: String, value: String)], callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void)
     
-    func post<Request: Encodable,  Response: Decodable, ServerError: Decodable>(url: URL, body: Request?, callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void)
+    func post<Request: Encodable,  Response: Decodable, ServerError: Decodable>(url: URL, body: Request?, headers: [(key: String, value: String)], callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void)
+    
+    func delete<Request: Encodable,  Response: Decodable, ServerError: Decodable>(url: URL, body: Request?, headers: [(key: String, value: String)], callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void)
 }
 
 final class JsonHttpClient:HttpClientProtocol {
     
-    private struct Nothing: Codable {}
+    struct Nothing: Codable {}
     
     private let preProcessData: ((Data) -> Data)?
     
@@ -47,10 +48,16 @@ final class JsonHttpClient:HttpClientProtocol {
         url: URL,
         method: String,
         body: Request?,
+        headers: [(key: String, value: String)],
         callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void
     ) {
         do {
             var request = baseRequest(url: url, method: method)
+            
+            for header in headers {
+                request.addValue(header.value, forHTTPHeaderField: header.key)
+            }
+            
             let jsonPayload = try body.map { try JSONEncoder().encode($0) }
             request.httpBody = jsonPayload
             let session = URLSession.shared
@@ -94,11 +101,32 @@ final class JsonHttpClient:HttpClientProtocol {
         }
     }
     
-    func get<Response: Decodable, ServerError: Decodable>(url: URL, callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void) {
-        send(url: url, method: "GET", body: nil as Nothing?, callback: callback)
+    func get<Response: Decodable, ServerError: Decodable>(
+        url: URL,
+        headers: [(key: String, value: String)] = [],
+        callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void) {
+        send(
+            url: url,
+            method: "GET",
+            body: nil as Nothing?,
+            headers: headers,
+            callback: callback
+        )
     }
     
-    func post<Request: Encodable, Response: Decodable, ServerError: Decodable>(url: URL, body: Request, callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void)  {
-        send(url: url, method: "POST", body: body, callback: callback)
+    func post<Request: Encodable, Response: Decodable, ServerError: Decodable>(
+        url: URL,
+        body: Request?,
+        headers: [(key: String, value: String)],
+        callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void)  {
+        send(url: url, method: "POST", body: body, headers: headers, callback: callback)
+    }
+    
+    func delete<Request: Encodable, Response: Decodable, ServerError: Decodable>(
+        url: URL,
+        body: Request?,
+        headers: [(key: String, value: String)],
+        callback: @escaping (Result<Response?, HTTPError<ServerError>>) -> Void)  {
+        send(url: url, method: "DELETE", body: body, headers: headers, callback: callback)
     }
 }

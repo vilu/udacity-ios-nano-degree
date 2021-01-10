@@ -8,20 +8,8 @@ final class SignInViewController: UIViewController {
     
     @IBOutlet weak var logInButton: UIButton!
     
-    private var udacityAPI: UdacityAPIProtocol!
-    
     override func viewDidLoad() {
         logInButton.layer.cornerRadius = Constants.Layout.buttonCornerRadius
-        
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        
-        udacityAPI = appDelegate.dependencies.udacityAPI
-        
-        // TODO Remove me!
-        emailTextField.text = "lund.viktor@gmail.com"
-        passwordTextField.text = "saiy.shor0mung4OOSH"
     }
 
     @IBAction func logInButtonOnTouchUpInside(_ sender: UIButton) {
@@ -34,9 +22,7 @@ final class SignInViewController: UIViewController {
             return
         }
         
-        udacityAPI.signIn(email: email, password: password) { result in
-            // TODO Is this correct? Is there any less error prone way of
-            // handling the threading here?
+        AppDependencies.udacityAPI.signIn(email: email, password: password) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let error):
@@ -55,15 +41,9 @@ final class SignInViewController: UIViewController {
                             actionTitle: "OK")
                     }
                     alert.map { self.present($0, animated: true, completion: nil) } 
-                case .success(let session):
-                    
-                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                        return
-                    }
-                    
-                    appDelegate.state.session = session
-                    
-                    
+                case .success((let session, let accountKey)):
+                    AppState.shared.session = session
+                    AppState.shared.accountKey = accountKey
                     
                     self.performSegue(withIdentifier: "tabBarSegue", sender: self)
                 }
@@ -71,11 +51,7 @@ final class SignInViewController: UIViewController {
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-    }
-    
     @IBAction func signUpButtonOnTouchUpInside(_ sender: UIButton) {
-        // TODO webview sign up link
+        attemptOpenWithAlertFallback(url: "https://auth.udacity.com/sign-up")
     }
 }

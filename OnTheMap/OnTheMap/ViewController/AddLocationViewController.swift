@@ -7,17 +7,10 @@ final class AddLocationViewController: UIViewController {
     @IBOutlet weak var linkTextField: UITextField!
     @IBOutlet weak var findLocationButton: UIButton!
 
-    private var parseAPI: ParseAPIProtocol!
     private let geocoder: CLGeocoder = CLGeocoder()
     
     override func viewDidLoad() {
         findLocationButton.layer.cornerRadius = 5.0
-        
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        
-        parseAPI = appDelegate.dependencies.parseAPI
     }
     
     @IBAction func findLocationButtonOnTouchUpInside(_ sender: UIButton) {
@@ -59,7 +52,7 @@ final class AddLocationViewController: UIViewController {
                 return
             }
             
-            guard let confirmLocationViewController = self.storyboard?.instantiateViewController(identifier: Constants.Layout.Identifiers.ConfirmLocationViewController) as? ConfirmLocationViewController else {
+            guard let confirmLocationViewController = self.storyboard?.instantiateViewController(identifier: Constants.Layout.Identifiers.confirmLocationViewController) as? ConfirmLocationViewController else {
                 return
             }
             
@@ -91,13 +84,7 @@ final class AddLocationViewController: UIViewController {
 
     }
     
-    
-    
     @IBAction func cancelButtonOnTap(_ sender: Any) {
-        guard let navigationController = navigationController else {
-            return
-        }
-        
-        navigationController.popViewController(animated: true)
+        navigationController?.popToRootViewController(animated: true)
     }
 }

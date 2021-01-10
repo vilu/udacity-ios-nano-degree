@@ -9,11 +9,6 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
-    // TODO Make app state clean!
-    var state: AppState = AppState()
-    var dependencies: AppDependencies = AppDependencies(udacityAPI: UdacityAPI(), parseAPI: ParseAPI())
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         return true

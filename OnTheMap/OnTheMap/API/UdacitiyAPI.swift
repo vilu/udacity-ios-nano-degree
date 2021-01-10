@@ -6,7 +6,9 @@ enum UdacityAPIError: Error {
 }
 
 protocol UdacityAPIProtocol {
-    func signIn(email: String, password:String, callback: @escaping (Result<Session, UdacityAPIError>) -> Void)
+    func signIn(email: String, password:String, callback: @escaping (Result<(session: Session, accountKey: String), UdacityAPIError>) -> Void)
+    
+    func signOut(callback: @escaping (Result<Void, UdacityAPIError>) -> Void)
 }
 
 final class UdacityAPI: UdacityAPIProtocol {
@@ -30,7 +32,7 @@ final class UdacityAPI: UdacityAPIProtocol {
         return decoder
     }()
     
-    func signIn(email: String, password: String, callback: @escaping (Result<Session, UdacityAPIError>) -> Void) {
+    func signIn(email: String, password: String, callback: @escaping (Result<(session: Session, accountKey: String), UdacityAPIError>) -> Void) {
         guard let url = URL(string: "\(apiBasePath)/session") else {
             callback(Result.failure(.generalError))
             return
@@ -41,7 +43,7 @@ final class UdacityAPI: UdacityAPIProtocol {
             password: password
         )
         
-        jsonHttpClient.post(url: url, body: payload) { (result: Result<SignInResponse?, HTTPError<UdacityAPIErrorResponse>>) in
+        jsonHttpClient.post(url: url, body: payload, headers: []) { (result: Result<SignInResponse?, HTTPError<UdacityAPIErrorResponse>>) in
             switch result {
             case .success(let response):
                 guard let response = response else {
@@ -50,11 +52,44 @@ final class UdacityAPI: UdacityAPIProtocol {
                 }
                 callback(
                     .success(
-                        Session(
-                            id: response.session.id,
-                            expiration: response.session.expiration
+                        (
+                            accountKey: response.account.key,
+                            session: Session(
+                                id: response.session.id,
+                                expiration: response.session.expiration
+                            )
                         )
                     )
+                )
+            case .failure(let error):
+                switch error {
+                case .serverError(403, _):
+                    callback(.failure(.authenticationError))
+                default:
+                    callback(.failure(.generalError))
+                }
+            }
+        }
+    }
+    
+    func signOut(callback: @escaping (Result<Void, UdacityAPIError>) -> Void) {
+        guard let url = URL(string: "\(apiBasePath)/session") else {
+            callback(Result.failure(.generalError))
+            return
+        }
+        
+        guard let xsrfToken = (HTTPCookieStorage.shared.cookies ?? []).first(where: { $0.name == "XSRF-TOKEN" }) else {
+            callback(.success(()))
+            return
+        }
+        
+        let xsrfCookie = (key: xsrfToken.name, value: xsrfToken.value)
+        
+        jsonHttpClient.delete(url: url, body: nil as JsonHttpClient.Nothing?, headers: [xsrfCookie]) { (result: Result<JsonHttpClient.Nothing?, HTTPError<UdacityAPIErrorResponse>>) in
+            switch result {
+            case .success:
+                callback(
+                    .success(())
                 )
             case .failure(let error):
                 switch error {

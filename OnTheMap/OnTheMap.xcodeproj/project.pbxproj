@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		5146A03A25923A6E00B653CD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146A03925923A6E00B653CD /* AppDelegate.swift */; };
 		5146A03C25923A6E00B653CD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146A03B25923A6E00B653CD /* SceneDelegate.swift */; };
-		5146A03E25923A6E00B653CD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146A03D25923A6E00B653CD /* ViewController.swift */; };
 		5146A04125923A6E00B653CD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5146A03F25923A6E00B653CD /* Main.storyboard */; };
 		5146A04325923A7000B653CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5146A04225923A7000B653CD /* Assets.xcassets */; };
 		5146A04625923A7000B653CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5146A04425923A7000B653CD /* LaunchScreen.storyboard */; };
@@ -22,7 +21,6 @@
 		51EC423E25992FBD0090BDA4 /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EC423D25992FBD0090BDA4 /* Domain.swift */; };
 		51EC424E259937FF0090BDA4 /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EC424D259937FF0090BDA4 /* AddLocationViewController.swift */; };
 		51EC4255259A26170090BDA4 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EC4254259A26170090BDA4 /* HTTPClient.swift */; };
-		51EC425D259A31F80090BDA4 /* OnTheMapNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EC425C259A31F80090BDA4 /* OnTheMapNavigationController.swift */; };
 		51EC4260259B75A90090BDA4 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EC425F259B75A90090BDA4 /* LocationCell.swift */; };
 		51EC4266259B7F220090BDA4 /* ConfirmLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EC4265259B7F220090BDA4 /* ConfirmLocationViewController.swift */; };
 		51EC426E259B8AE60090BDA4 /* LocationMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EC426D259B8AE60090BDA4 /* LocationMapViewController.swift */; };
@@ -34,7 +32,6 @@
 		5146A03625923A6E00B653CD /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5146A03925923A6E00B653CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5146A03B25923A6E00B653CD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		5146A03D25923A6E00B653CD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		5146A04025923A6E00B653CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5146A04225923A7000B653CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5146A04525923A7000B653CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -48,7 +45,6 @@
 		51EC423D25992FBD0090BDA4 /* Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
 		51EC424D259937FF0090BDA4 /* AddLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
 		51EC4254259A26170090BDA4 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
-		51EC425C259A31F80090BDA4 /* OnTheMapNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapNavigationController.swift; sourceTree = "<group>"; };
 		51EC425F259B75A90090BDA4 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
 		51EC4265259B7F220090BDA4 /* ConfirmLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmLocationViewController.swift; sourceTree = "<group>"; };
 		51EC426D259B8AE60090BDA4 /* LocationMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMapViewController.swift; sourceTree = "<group>"; };
@@ -86,16 +82,14 @@
 		5146A03825923A6E00B653CD /* OnTheMap */ = {
 			isa = PBXGroup;
 			children = (
+				51EBD70225AB84260072133E /* View */,
 				51EC4259259A26470090BDA4 /* SignIn */,
-				51EC4258259A262E0090BDA4 /* Map */,
+				51EC4258259A262E0090BDA4 /* ViewController */,
 				51EC4253259A25F50090BDA4 /* Utilities */,
-				51EC424025992FE20090BDA4 /* UdacityAPI */,
+				51EC424025992FE20090BDA4 /* API */,
 				5146A03925923A6E00B653CD /* AppDelegate.swift */,
-				51EC4274259BC6D60090BDA4 /* Constants.swift */,
 				5146A03B25923A6E00B653CD /* SceneDelegate.swift */,
-				5146A03D25923A6E00B653CD /* ViewController.swift */,
 				5146A03F25923A6E00B653CD /* Main.storyboard */,
-				51EC425C259A31F80090BDA4 /* OnTheMapNavigationController.swift */,
 				5146A04225923A7000B653CD /* Assets.xcassets */,
 				5146A04425923A7000B653CD /* LaunchScreen.storyboard */,
 				5146A04725923A7000B653CD /* Info.plist */,
@@ -104,18 +98,28 @@
 			path = OnTheMap;
 			sourceTree = "<group>";
 		};
-		51EC424025992FE20090BDA4 /* UdacityAPI */ = {
+		51EBD70225AB84260072133E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				51EC425F259B75A90090BDA4 /* LocationCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		51EC424025992FE20090BDA4 /* API */ = {
 			isa = PBXGroup;
 			children = (
 				51BB7D2D259260D800F24579 /* UdacitiyAPI.swift */,
 				51CAE4A5259F845700AAE887 /* ParseAPI.swift */,
 			);
-			path = UdacityAPI;
+			path = API;
 			sourceTree = "<group>";
 		};
 		51EC4253259A25F50090BDA4 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				51CAE4A2259F6E8F00AAE887 /* PinMapAnnotation.swift */,
+				51EC4274259BC6D60090BDA4 /* Constants.swift */,
 				51EC4254259A26170090BDA4 /* HTTPClient.swift */,
 				51CAE4A825A076D700AAE887 /* DefaultAlert.swift */,
 				51CAE4AB25A08D8300AAE887 /* SafeURLOpener.swift */,
@@ -123,23 +127,21 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
-		51EC4258259A262E0090BDA4 /* Map */ = {
+		51EC4258259A262E0090BDA4 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				51EC425F259B75A90090BDA4 /* LocationCell.swift */,
+				51BB7D2A25925B5400F24579 /* SignInViewController.swift */,
 				51EC424D259937FF0090BDA4 /* AddLocationViewController.swift */,
 				51EC4265259B7F220090BDA4 /* ConfirmLocationViewController.swift */,
 				51EC426D259B8AE60090BDA4 /* LocationMapViewController.swift */,
-				51CAE4A2259F6E8F00AAE887 /* PinMapAnnotation.swift */,
 				51EC4270259B8B6F0090BDA4 /* LocationTableViewController.swift */,
 			);
-			path = Map;
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		51EC4259259A26470090BDA4 /* SignIn */ = {
 			isa = PBXGroup;
 			children = (
-				51BB7D2A25925B5400F24579 /* SignInViewController.swift */,
 			);
 			path = SignIn;
 			sourceTree = "<group>";
@@ -216,7 +218,6 @@
 			files = (
 				51BB7D2B25925B5400F24579 /* SignInViewController.swift in Sources */,
 				51EC424E259937FF0090BDA4 /* AddLocationViewController.swift in Sources */,
-				5146A03E25923A6E00B653CD /* ViewController.swift in Sources */,
 				5146A03A25923A6E00B653CD /* AppDelegate.swift in Sources */,
 				51EC4266259B7F220090BDA4 /* ConfirmLocationViewController.swift in Sources */,
 				51EC4271259B8B6F0090BDA4 /* LocationTableViewController.swift in Sources */,
@@ -229,7 +230,6 @@
 				51CAE4A925A076D700AAE887 /* DefaultAlert.swift in Sources */,
 				51CAE4AC25A08D8300AAE887 /* SafeURLOpener.swift in Sources */,
 				51EC4275259BC6D60090BDA4 /* Constants.swift in Sources */,
-				51EC425D259A31F80090BDA4 /* OnTheMapNavigationController.swift in Sources */,
 				51CAE4A6259F845700AAE887 /* ParseAPI.swift in Sources */,
 				51EC423E25992FBD0090BDA4 /* Domain.swift in Sources */,
 			);
