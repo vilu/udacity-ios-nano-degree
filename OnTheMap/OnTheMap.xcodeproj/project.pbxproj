@@ -82,6 +82,7 @@
 		5146A03825923A6E00B653CD /* OnTheMap */ = {
 			isa = PBXGroup;
 			children = (
+				51EBD70525AB85380072133E /* Model */,
 				51EBD70225AB84260072133E /* View */,
 				51EC4259259A26470090BDA4 /* SignIn */,
 				51EC4258259A262E0090BDA4 /* ViewController */,
@@ -93,7 +94,6 @@
 				5146A04225923A7000B653CD /* Assets.xcassets */,
 				5146A04425923A7000B653CD /* LaunchScreen.storyboard */,
 				5146A04725923A7000B653CD /* Info.plist */,
-				51EC423D25992FBD0090BDA4 /* Domain.swift */,
 			);
 			path = OnTheMap;
 			sourceTree = "<group>";
@@ -104,6 +104,14 @@
 				51EC425F259B75A90090BDA4 /* LocationCell.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		51EBD70525AB85380072133E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				51EC423D25992FBD0090BDA4 /* Domain.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		51EC424025992FE20090BDA4 /* API */ = {
