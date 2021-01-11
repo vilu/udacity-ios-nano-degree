@@ -31,8 +31,8 @@ final class ConfirmLocationViewController: UIViewController {
         
         guard
             let uniqueKey = AppState.shared.accountKey,
-            let firstName = AppState.shared.firstName,
-            let lastName = AppState.shared.lastName,
+            let firstName = AppState.shared.user?.firstName,
+            let lastName = AppState.shared.user?.lastName,
             let location = location,
             let url = url,
             let coordinate = coordinate
@@ -81,6 +81,9 @@ final class ConfirmLocationViewController: UIViewController {
         )
         map.addAnnotations([annotation])
         map.selectAnnotation(annotation, animated: true)
+        let span = MKCoordinateSpan(latitudeDelta: 0.050, longitudeDelta: 0.050)
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        map.setRegion(region, animated: true)
     }
     
     @IBAction func cancelButtonOnTap(_ sender: Any) {

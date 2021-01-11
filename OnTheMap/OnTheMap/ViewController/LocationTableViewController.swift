@@ -2,21 +2,17 @@ import UIKit
 
 final class LocationTableViewController: UITableViewController {
     
-    private var studentLocations = [StudentInformation]()
-    
     @IBAction func logoutOnTap(_ sender: Any) {
-        guard
-            let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
-            let storyboard = storyboard
-        else {
-            return
-        }
-        
-        AppDependencies.udacityAPI.signOut { _ in
+        AppDependencies.udacityAPI.signOut { result in
             DispatchQueue.main.async {
-                let vc = storyboard.instantiateViewController(identifier: Constants.Layout.Identifiers.signInViewController)
-                
-                sceneDelegate.window?.rootViewController = vc
+                switch result {
+                case .success:
+                    self.dismiss(animated: true)
+                case .failure(let error):
+                    print("UdacityAPI API Error: \(String(describing: error))")
+                    let alert = UIAlertController.defaultAlert(title: "Failed to sign out")
+                    self.present(alert, animated: true, completion: nil)
+                }
             }
         }
     }
@@ -26,6 +22,13 @@ final class LocationTableViewController: UITableViewController {
     }
     
     @IBAction func addLocationOnTap(_ sender: Any) {
+        guard let storyboard = storyboard, let navigationController = navigationController else {
+            return
+        }
+        
+        let addLocationVC = storyboard.instantiateViewController(identifier: Constants.Layout.Identifiers.addLocationViewController)
+        navigationController.pushViewController(addLocationVC,
+                                                animated: true)
     }
     
     override func viewDidLoad() {
@@ -37,7 +40,7 @@ final class LocationTableViewController: UITableViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let locations):
-                    self.studentLocations = locations
+                    AppState.shared.studentInformations = locations
                     self.tableView.reloadData()
                 case .failure(let error):
                     print("Parse API Error: \(String(describing: error))")
@@ -55,7 +58,7 @@ final class LocationTableViewController: UITableViewController {
     // MARK: - UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return studentLocations.count
+        return AppState.shared.studentInformations.count
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -65,7 +68,7 @@ final class LocationTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let locationCell = tableView.dequeueReusableCell(withIdentifier: Constants.Layout.Identifiers.locationCell, for: indexPath) as! LocationCell
         
-        let studentLocation = studentLocations[indexPath.row]
+        let studentLocation = AppState.shared.studentInformations[indexPath.row]
         
         locationCell.userName.text = "\(studentLocation.firstName) \(studentLocation.lastName)"
         locationCell.website.text = studentLocation.mediaURL
@@ -76,7 +79,7 @@ final class LocationTableViewController: UITableViewController {
     // MARK: - UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let studentLocation = studentLocations[indexPath.row]
+        let studentLocation = AppState.shared.studentInformations[indexPath.row]
         
         attemptOpenWithAlertFallback(url: studentLocation.mediaURL)
     }

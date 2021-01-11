@@ -4,7 +4,7 @@ extension UIAlertController {
     
     static func defaultAlert(
         title: String,
-        message: String,
+        message: String? = nil,
         actionTitle: String = "OK",
         action: ((UIAlertAction) -> Void)? = nil
     ) -> UIAlertController {

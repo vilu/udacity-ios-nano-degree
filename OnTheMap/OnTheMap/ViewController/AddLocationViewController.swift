@@ -6,7 +6,8 @@ final class AddLocationViewController: UIViewController {
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var linkTextField: UITextField!
     @IBOutlet weak var findLocationButton: UIButton!
-
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
     private let geocoder: CLGeocoder = CLGeocoder()
     
     override func viewDidLoad() {
@@ -23,7 +24,12 @@ final class AddLocationViewController: UIViewController {
             return
         }
         
+        activityIndicator.startAnimating()
+        
+        
         geocoder.geocodeAddressString(location) { (placemarks, error) in
+
+            self.activityIndicator.stopAnimating()
             
             if let error = error {
                 print("Failed to geocode location \(location) with error: \(String(describing: error))")

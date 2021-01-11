@@ -314,6 +314,10 @@
                                     <constraint firstItem="tZp-x9-ATK" firstAttribute="width" secondItem="GM0-k7-lg1" secondAttribute="width" id="k8e-1b-Lba"/>
                                 </constraints>
                             </stackView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="bOK-1M-Rj3">
+                                <rect key="frame" x="198" y="294" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="gPc-gr-cd9"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -332,6 +336,7 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="bOK-1M-Rj3" id="Yjo-dv-Fvu"/>
                         <outlet property="findLocationButton" destination="lHx-Xv-pTQ" id="hFy-Tp-kXv"/>
                         <outlet property="linkTextField" destination="tZp-x9-ATK" id="KBH-6b-jhD"/>
                         <outlet property="locationTextField" destination="Ga3-Nw-Kqe" id="50C-ZJ-dP6"/>

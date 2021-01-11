@@ -8,6 +8,8 @@ enum UdacityAPIError: Error {
 protocol UdacityAPIProtocol {
     func signIn(email: String, password:String, callback: @escaping (Result<(session: Session, accountKey: String), UdacityAPIError>) -> Void)
     
+    func getUser(userId: String, callback: @escaping (Result<User, UdacityAPIError>) -> Void)
+    
     func signOut(callback: @escaping (Result<Void, UdacityAPIError>) -> Void)
 }
 
@@ -53,12 +55,41 @@ final class UdacityAPI: UdacityAPIProtocol {
                 callback(
                     .success(
                         (
-                            accountKey: response.account.key,
                             session: Session(
                                 id: response.session.id,
                                 expiration: response.session.expiration
-                            )
+                            ),
+                            accountKey: response.account.key
                         )
+                    )
+                )
+            case .failure(let error):
+                switch error {
+                case .serverError(403, _):
+                    callback(.failure(.authenticationError))
+                default:
+                    callback(.failure(.generalError))
+                }
+            }
+        }
+    }
+    
+    func getUser(userId: String, callback: @escaping (Result<User, UdacityAPIError>) -> Void) {
+        guard let url = URL(string: "\(apiBasePath)/users/\(userId)") else {
+            callback(Result.failure(.generalError))
+            return
+        }
+        
+        jsonHttpClient.get(url: url, headers: []) { (result: Result<UserResponse?, HTTPError<UdacityAPIErrorResponse>>) in
+            switch result {
+            case .success(let response):
+                guard let response = response else {
+                    callback(.failure(.generalError))
+                    return
+                }
+                callback(
+                    .success(
+                        User(firstName: response.first_name, lastName: response.last_name)
                     )
                 )
             case .failure(let error):
@@ -134,5 +165,10 @@ extension UdacityAPI {
         }
         var account: Account
         var session: Session
+    }
+    
+    struct UserResponse: Codable {
+        var last_name: String
+        var first_name: String
     }
 }

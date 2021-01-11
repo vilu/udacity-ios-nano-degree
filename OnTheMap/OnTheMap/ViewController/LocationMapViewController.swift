@@ -25,18 +25,16 @@ final class LocationMapViewController: UIViewController {
     }
     
     @IBAction func logoutOnTap(_ sender: Any) {
-        guard
-            let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
-            let storyboard = storyboard
-        else {
-            return
-        }
-        
-        AppDependencies.udacityAPI.signOut { _ in
+        AppDependencies.udacityAPI.signOut { result in
             DispatchQueue.main.async {
-                let vc = storyboard.instantiateViewController(identifier: Constants.Layout.Identifiers.signInViewController)
-                
-                sceneDelegate.window?.rootViewController = vc
+                switch result {
+                case .success:
+                    self.dismiss(animated: true)
+                case .failure(let error):
+                    print("UdacityAPI API Error: \(String(describing: error))")
+                    let alert = UIAlertController.defaultAlert(title: "Failed to sign out")
+                    self.present(alert, animated: true, completion: nil)
+                }
             }
         }
     }

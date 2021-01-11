@@ -63,7 +63,11 @@ final class JsonHttpClient:HttpClientProtocol {
             let session = URLSession.shared
             session.dataTask(with: request) { data, response, error in
                 do {
-                    let response = response as! HTTPURLResponse
+                    
+                    guard let response = response as? HTTPURLResponse else {
+                        callback(.failure(.generalError))
+                        return
+                    }
 
                     let responseData: Data?
                     if let preProcessData = self.preProcessData, let data = data {

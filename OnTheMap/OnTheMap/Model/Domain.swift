@@ -1,18 +1,12 @@
 import Foundation
 
 class AppState {
-    static var shared: AppState = AppState(firstName: "Ignatius", lastName: "J. Reilly")
+    static var shared: AppState = AppState()
     
     var session: Session?
     var accountKey: String?
-    var firstName: String?
-    var lastName: String?
-    var studentInformations: [StudentInformation]?
-    
-    init(firstName: String, lastName:String) {
-        self.firstName = firstName
-        self.lastName = lastName
-    }
+    var user: User?
+    var studentInformations: [StudentInformation] = []
 }
 
 struct AppDependencies {
@@ -23,6 +17,11 @@ struct AppDependencies {
 struct Session {
     var id: String
     var expiration: Date
+}
+
+struct User {
+    var firstName: String
+    var lastName: String
 }
 
 struct StudentInformation {
