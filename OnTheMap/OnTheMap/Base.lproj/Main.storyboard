@@ -207,10 +207,10 @@
             </objects>
             <point key="canvasLocation" x="-112" y="701"/>
         </scene>
-        <!--Map Tab Bar Controller-->
+        <!--Tab Bar Controller-->
         <scene sceneID="1ul-dH-RcF">
             <objects>
-                <tabBarController storyboardIdentifier="mapTabBarController" id="alS-7v-f5U" customClass="MapTabBarController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="mapTabBarController" id="alS-7v-f5U" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="z9Q-In-N3m">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -314,18 +314,25 @@
                                     <constraint firstItem="tZp-x9-ATK" firstAttribute="width" secondItem="GM0-k7-lg1" secondAttribute="width" id="k8e-1b-Lba"/>
                                 </constraints>
                             </stackView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="bOK-1M-Rj3">
-                                <rect key="frame" x="198" y="294" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="bOK-1M-Rj3">
+                                <rect key="frame" x="188.5" y="456.5" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="gPc-gr-cd9"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="gPc-gr-cd9" firstAttribute="bottom" secondItem="GM0-k7-lg1" secondAttribute="bottom" constant="-200" id="6hm-oe-fPi"/>
                             <constraint firstItem="GM0-k7-lg1" firstAttribute="centerY" secondItem="gPc-gr-cd9" secondAttribute="centerY" id="B1N-ac-8bQ"/>
                             <constraint firstItem="gPc-gr-cd9" firstAttribute="trailing" secondItem="GM0-k7-lg1" secondAttribute="trailing" constant="64" id="UiD-5f-prN"/>
+                            <constraint firstItem="bOK-1M-Rj3" firstAttribute="centerY" secondItem="gPc-gr-cd9" secondAttribute="centerY" id="Zit-wo-H00"/>
+                            <constraint firstItem="bOK-1M-Rj3" firstAttribute="centerX" secondItem="gPc-gr-cd9" secondAttribute="centerX" id="eR2-Zj-5CU"/>
                             <constraint firstItem="GM0-k7-lg1" firstAttribute="leading" secondItem="gPc-gr-cd9" secondAttribute="leading" constant="64" id="wU9-cV-eut"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="6hm-oe-fPi"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Add Location" id="uI0-or-hWG">
                         <barButtonItem key="leftBarButtonItem" title="CANCEL" id="RH3-VD-tN6">
@@ -340,6 +347,8 @@
                         <outlet property="findLocationButton" destination="lHx-Xv-pTQ" id="hFy-Tp-kXv"/>
                         <outlet property="linkTextField" destination="tZp-x9-ATK" id="KBH-6b-jhD"/>
                         <outlet property="locationTextField" destination="Ga3-Nw-Kqe" id="50C-ZJ-dP6"/>
+                        <outlet property="stackViewBottomConstraint" destination="6hm-oe-fPi" id="w0i-7u-G1m"/>
+                        <outlet property="stackViewCenterYConstraint" destination="B1N-ac-8bQ" id="9vp-UI-Sy7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R0Z-Bg-Lpj" sceneMemberID="firstResponder"/>
