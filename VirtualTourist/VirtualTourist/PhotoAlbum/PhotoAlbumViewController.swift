@@ -44,7 +44,6 @@ final class PhotoAlbumViewController: UIViewController {
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        // TODO for some reason I have this issue but seeminly only with the iPhone 12 simulator https://stackoverflow.com/questions/65433360/app-crashes-when-resizing-window-with-mapview-in-xcode-12
         let map = MKMapView()
         let span = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
         let center = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
@@ -52,8 +51,6 @@ final class PhotoAlbumViewController: UIViewController {
         map.addAnnotation(PinMapAnnotation(pin: pin))
         map.delegate = self
         
-        // TODO frame seems to be ignored here?
-        // TODO figure out what happens on rotation here?
         album = UICollectionView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.width), collectionViewLayout: layout())
         album.delegate = self
         album.dataSource = self
@@ -61,7 +58,7 @@ final class PhotoAlbumViewController: UIViewController {
         album.backgroundColor = .white
         
         if let pinPhotos = pin.relationship?.allObjects.compactMap({ $0 as? Photo}), !pinPhotos.isEmpty {
-            photos = pinPhotos
+            photos = pinPhotos.sorted()
             album.reloadData()
         } else {
             setPhotosFromFlickr()
@@ -112,11 +109,12 @@ final class PhotoAlbumViewController: UIViewController {
                     }
                     self.photos = flickrPhotos.map { flickrPhoto in
                         let photo = Photo(context: self.persistentContainer.viewContext)
+                        photo.name = flickrPhoto.title
                         photo.url = flickrPhoto.url_q
                         photo.data = nil
                         self.pin.addToRelationship(photo)
                         return photo
-                    }
+                    }.sorted()
                     
                     self.persistentContainer.saveContext()
                     
@@ -125,7 +123,6 @@ final class PhotoAlbumViewController: UIViewController {
             case .failure(let error):
                 DispatchQueue.main.async {
                     self.setPhotosFromFlickerToolbarButton.isEnabled = true
-                    // TODO error state?
                     Log.info("Failed to fetch photos \(error)")
                 }
                 
@@ -169,8 +166,7 @@ final class Cell: UICollectionViewCell {
         let imgView = UIImageView()
         
         imgView.contentMode = .scaleAspectFill
-        
-        // TODO Maybe use UICollectionViewLayout instead
+
         imgView.layer.borderWidth = 2
         imgView.layer.borderColor = UIColor.white.cgColor
         
@@ -186,7 +182,6 @@ final class Cell: UICollectionViewCell {
     var photo: Photo? {
         willSet {
             if let photo = newValue {
-                
                 if let data = photo.data {
                     imageView.image = UIImage(data: data)
                     imageView.isHidden = false
@@ -200,14 +195,12 @@ final class Cell: UICollectionViewCell {
                                 self.imageView.isHidden = false
                                 self.activityIndicator.isHidden = true
                             case .failure(let error):
-                                // TODO ERROR
-                                Log.info("Download failed with: \(error)")
+                                Log.info("Image download failed with: \(error)")
                             }
                         }
                     }
                 } else {
-                    // TODO ERROR
-                    Log.info("ERROR!!x")
+                    Log.info("Unexpected photo value: \(String(describing: newValue))")
                 }
             } else {
                 imageView.isHidden = true
@@ -246,7 +239,6 @@ final class Cell: UICollectionViewCell {
 
 extension PhotoAlbumViewController: UICollectionViewDataSource {
     
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         photos.count
     }
@@ -259,22 +251,6 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
         cell.photo = photo
         
         return cell
-    }
-}
-
-
-enum AsyncDownloaderError: Error {
-    case defaultError
-}
-final class AsyncDownloader {
-    func download(url: URL, completion: @escaping (Result<Data, AsyncDownloaderError>) -> Void) {
-        DispatchQueue.global(qos: .background).async {
-            guard let data = try? Data(contentsOf: url) else {
-                return completion(.failure(.defaultError))
-            }
-            
-            return completion(.success(data))
-        }
     }
 }
 

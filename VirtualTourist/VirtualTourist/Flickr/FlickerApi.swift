@@ -36,7 +36,7 @@ final class FlickerApi {
         request.httpMethod = "GET"
         
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            guard error != nil else {
+            guard error == nil else {
                 Log.info("""
                         Flickr search call failed
                         error: \(String(describing: error?.localizedDescription))

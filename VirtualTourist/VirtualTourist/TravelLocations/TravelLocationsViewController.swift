@@ -1,23 +1,21 @@
 import UIKit
 import MapKit
+import CoreData
 
 final class TravelLocationsViewController: UIViewController {
     
     private let map = MKMapView()
     
-    let mapRegionRepository: MapRegionRepositoryProtocol
-    let pinRepository: PinRepositoryProtocol
+    let mapRegionRepository: UserDefaultsMapRegionRepository
     let flickerApi: FlickerApi
     let persistentContainer: PersistentContainer
     
     init(
-        mapRegionRepository: MapRegionRepositoryProtocol,
-        pinRepository: PinRepositoryProtocol,
+        mapRegionRepository: UserDefaultsMapRegionRepository,
         flickerApi: FlickerApi,
         persistentContainer: PersistentContainer
     ) {
         self.mapRegionRepository = mapRegionRepository
-        self.pinRepository = pinRepository
         self.flickerApi = flickerApi
         self.persistentContainer = persistentContainer
         super.init(nibName: nil, bundle: nil)
@@ -38,7 +36,7 @@ final class TravelLocationsViewController: UIViewController {
             switch result {
             case .success(let existingMapRegion):
                 if let existingMapRegion = existingMapRegion {
-                    map.setRegion(MKCoordinateRegion(
+                    self.map.setRegion(MKCoordinateRegion(
                         center: CLLocationCoordinate2DMake(existingMapRegion.center.latitude, existingMapRegion.center.longitude),
                         span: MKCoordinateSpan(
                             latitudeDelta: existingMapRegion.span.latitudeDelta,
@@ -47,24 +45,20 @@ final class TravelLocationsViewController: UIViewController {
                     ), animated: true)
                 }
                 
-                
-                
             case .failure(let error):
-                // TODO handle error
-                Log.info("## error: \(error)")
+                Log.info("Failed to fetch previous map region configuration: \(error)")
             }
         }
         
-        pinRepository.get { result in
-            switch result {
-            case .success(let pins):
-                for pin in pins {
-                    map.addAnnotation(PinMapAnnotation(pin: pin))
-                }
-            case .failure(let error):
-                // TODO handle error
-                Log.info("## error: \(error)")
+        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+        
+        do {
+            let pins = try persistentContainer.viewContext.fetch(fetchRequest)
+            for pin in pins {
+                map.addAnnotation(PinMapAnnotation(pin: pin))
             }
+        } catch {
+            Log.info("Failed to fetch pins from core data: \(error)")
         }
         
         map.translatesAutoresizingMaskIntoConstraints = false
@@ -87,7 +81,7 @@ final class TravelLocationsViewController: UIViewController {
 
         let coordinate = map.convert(sender.location(in: map), toCoordinateFrom: map)
         
-        Log.info("Create pin with \(coordinate)")
+        Log.info("Created pin with \(coordinate)")
         
         let pin = Pin(context: persistentContainer.viewContext)
         pin.latitude = coordinate.latitude
@@ -98,8 +92,6 @@ final class TravelLocationsViewController: UIViewController {
         map.addAnnotation(annotation)
         
         persistentContainer.saveContext()
-        
-        Log.info("Was long tapped at \(sender.location(in: map))")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,13 +99,6 @@ final class TravelLocationsViewController: UIViewController {
         navigationController?.setNavigationBarHidden(true, animated: false)
         navigationController?.setToolbarHidden(true, animated: false)
     }
-    
-//    override func viewDidDisappear(_ animated: Bool) {
-//        super.viewDidDisappear(animated)
-//        navigationController?.setNavigationBarHidden(false, animated: true)
-//    }
-    
-    
 }
 
 // MARK: - MKMapViewDelegate
@@ -121,10 +106,7 @@ final class TravelLocationsViewController: UIViewController {
 extension TravelLocationsViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        
-        mapRegionRepository.save(mapRegion: mapView.region) { result in
-            Log.info("save result: \(String(describing: result))")
-        }
+        mapRegionRepository.save(mapRegion: mapView.region)
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -137,7 +119,9 @@ extension TravelLocationsViewController: MKMapViewDelegate {
         let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? PinAnnotationView ?? PinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
         
         annotationView.onTapCallback = { pin in
-            guard let navigationController = self.navigationController else { return }
+            guard let navigationController = self.navigationController else {
+                return
+            }
             
             let photoAlbumViewController = PhotoAlbumViewController(
                 pin: pin,
@@ -148,41 +132,9 @@ extension TravelLocationsViewController: MKMapViewDelegate {
             navigationController.pushViewController(photoAlbumViewController, animated: true)
         }
         
-        
         annotationView.annotation = annotation
         
         return annotationView
     }
 }
 
-final class PinAnnotationView: MKPinAnnotationView {
-    
-    var onTapCallback: ((Pin) -> Void)?
-    
-    init(
-        annotation: PinMapAnnotation,
-        reuseIdentifier: String
-    ) {
-        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTap)))
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc
-    private func onTap(sender: UITapGestureRecognizer) {
-        if sender.state == .ended {
-            guard
-                let onTapCallback = onTapCallback,
-                let annotation = annotation as? PinMapAnnotation else {
-                return
-            }
-            onTapCallback(annotation.pin)
-        }
-    }
-    
-    
-}

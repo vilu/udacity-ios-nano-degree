@@ -1,18 +1,9 @@
-//
-//  AppDelegate.swift
-//  VirtualTourist
-//
-//  Created by Viktor Lund on 17.01.21.
-//
-
 import UIKit
 import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var mapRegion: MapRegionRepositoryProtocol!
-    var pinRepository: PinRepositoryProtocol!
-    var photoRepositoroy: PhotoRepository!
+    var mapRegionRepository: UserDefaultsMapRegionRepository!
     var flickerApi: FlickerApi!
     
     lazy var persistentContainer: PersistentContainer = {
@@ -26,10 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        mapRegion = UserDefaultsRegionRepository()
-        pinRepository = PinRepository(persistentContainer: persistentContainer)
+        mapRegionRepository = UserDefaultsMapRegionRepository()
         flickerApi = FlickerApi()
-        photoRepositoroy = PhotoRepository(persistentContainer: persistentContainer)
         return true
     }
 

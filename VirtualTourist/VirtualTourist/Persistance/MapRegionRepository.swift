@@ -4,16 +4,7 @@ enum MapRegionRepositoryError: Error {
     case generalError
 }
 
-
-protocol MapRegionRepositoryProtocol {
-    
-    func save(mapRegion: MKCoordinateRegion, completion: ((Result<Void, MapRegionRepositoryError>) -> Void))
-    
-    func get(completion: ((Result<MKCoordinateRegion?, MapRegionRepositoryError>) -> Void))
-    
-}
-
-final class UserDefaultsRegionRepository: MapRegionRepositoryProtocol {
+final class UserDefaultsMapRegionRepository {
     
     private static let userDefaultsKey = "user-map-region"
     
@@ -55,25 +46,28 @@ final class UserDefaultsRegionRepository: MapRegionRepositoryProtocol {
         }
     }
     
-    func save(mapRegion: MKCoordinateRegion, completion: ((Result<Void, MapRegionRepositoryError>) -> Void)) {
-        do {
-            let data = try encoder.encode(MapRegion(from: mapRegion))
-            UserDefaults.standard.set(data, forKey: UserDefaultsRegionRepository.userDefaultsKey)
-            Log.info("Saved region \(String(describing: MapRegion(from: mapRegion)))")
-        } catch {
-            Log.info("Could not persist map region: \(error)")
-            completion(.failure(.generalError))
+    func save(mapRegion: MKCoordinateRegion) {
+        DispatchQueue.global().async {
+            do {
+                let data = try self.encoder.encode(MapRegion(from: mapRegion))
+                UserDefaults.standard.set(data, forKey: UserDefaultsMapRegionRepository.userDefaultsKey)
+                Log.info("Persisted map region")
+            } catch {
+                Log.info("Failed to persist map region: \(error)")
+            }
         }
     }
     
-    func get(completion: ((Result<MKCoordinateRegion?, MapRegionRepositoryError>) -> Void)) {
-        if
-            let data = UserDefaults.standard.data(forKey: UserDefaultsRegionRepository.userDefaultsKey),
-            let region = try? decoder.decode(MapRegion.self, from: data) {
-            Log.info("Fetched region \(String(describing: region))")
-            return completion(.success(region.asMKCoordinateRegion()))
+    func get(completion: @escaping ((Result<MKCoordinateRegion?, MapRegionRepositoryError>) -> Void)) {
+        DispatchQueue.global().async {
+            if
+                let data = UserDefaults.standard.data(forKey: UserDefaultsMapRegionRepository.userDefaultsKey),
+                let region = try? self.decoder.decode(MapRegion.self, from: data) {
+                Log.info("Fetched map region \(String(describing: region))")
+                return completion(.success(region.asMKCoordinateRegion()))
+            }
+            Log.info("Failed to fetch map region")
+            return completion(.success(nil))
         }
-        Log.info("Failed to fetch")
-        return completion(.success(nil))
     }
 }

@@ -12,6 +12,3 @@ class PinMapAnnotation: MKPointAnnotation {
         self.coordinate = pin.asCoordinate()
     }
 }
-
-// MARK - Gesture
-

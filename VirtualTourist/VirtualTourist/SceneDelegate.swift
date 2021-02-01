@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  VirtualTourist
-//
-//  Created by Viktor Lund on 17.01.21.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -20,8 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
         let travelLocationsViewController = TravelLocationsViewController(
-            mapRegionRepository: appDelegate.mapRegion,
-            pinRepository: appDelegate.pinRepository,
+            mapRegionRepository: appDelegate.mapRegionRepository,
             flickerApi: appDelegate.flickerApi,
             persistentContainer: appDelegate.persistentContainer
         )
